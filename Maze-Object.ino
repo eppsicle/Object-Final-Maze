@@ -9,19 +9,30 @@ int upVal = 0;
 
 struct maze{
   int mazeNumber;
+  int goal;
   char mazeArray[64];
 };
 
-maze mazes[5];
-int numOfGoals = 0;
-bool isOnGoal = false;
-
 int timer = 0;
+int timerCounter = 0;
 
 bool downButtonDown = false;
 bool leftButtonDown = false;
 bool rightButtonDown = false;
 bool upButtonDown = false;
+int characterPos = 0;
+
+int whichMaze = 1;
+int numGoals = 0;
+bool isOnGoal = false;
+bool isTimeUp = false;
+
+maze maze1 = {1, 7, {1, 3, 4, 5, 9, 12, 17, 18, 20, 21, 29, 30, 32, 33, 35, 41, 43, 44, 45, 46, 49, 51, 59, 62, 63}};
+  maze maze2 = {2, 56, {0, 1, 2, 6, 12, 17, 18, 19, 20, 21, 22, 23, 29, 32, 33, 37, 41, 42, 43, 51, 52, 53, 54}};
+  maze maze3 = {3, 16, {0, 7, 8, 9, 10, 11, 14, 15, 17, 25, 27, 28, 30, 35, 36, 37, 38, 41, 43, 48, 49, 50, 51, 54, 55, 63}};
+  maze maze4 = {4, 63, {3, 5, 7, 9, 11, 17, 19, 21, 22, 25, 27, 29, 32, 33, 37, 44, 45, 46, 48, 49, 50, 53, 61}};
+  maze maze5 = {5, 0, {1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 51, 54, 56, 57, 58, 59, 61, 62}};
+  maze mazes[5] = {maze1, maze2, maze3, maze4, maze5};
 
 void setup() {
   // put your setup code here, to run once:
@@ -42,6 +53,26 @@ void setup() {
       }
   }
   */
+
+  
+  /*
+  maze1.mazeNumber = 1;
+maze2.mazeNumber = 2;
+maze3.mazeNumber = 3;
+maze4.mazeNumber = 4;
+maze5.mazeNumber = 5;
+maze1.goal = 7;
+maze2.goal = 56;
+maze3.goal = 16;
+maze4.goal = 63;
+maze5.goal = 0;
+maze1.mazeArray = {1, 3, 4, 5, 9, 12, 17, 18, 20, 21, 29, 30, 32, 33, 35, 41, 43, 44, 45, 46, 49, 51, 59, 62, 63};
+maze2.mazeArray = {0, 1, 2, 6, 12, 17, 18, 19, 20, 21, 22, 23, 29, 32, 33, 37, 41, 42, 43, 51, 52, 53, 54};
+maze3.mazeArray = {0, 7, 8, 9, 10, 11, 14, 15, 17, 25, 27, 28, 30, 35, 36, 37, 38, 41, 43, 48, 49, 50, 51, 54, 55, 63};
+maze4.mazeArray = {3, 5, 7, 9, 11, 17, 19, 21, 22, 25, 27, 29, 32, 33, 37, 44, 45, 46, 48, 49, 50, 53, 61};
+maze5.mazeArray = {1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 51, 54, 56, 57, 58, 59, 61, 62};
+maze mazes[5] = {maze1, maze2, maze3, maze4, maze5};
+*/
 }
 
 void loop() {
@@ -50,68 +81,131 @@ void loop() {
     leftVal = digitalRead(leftPin);
     upVal = digitalRead(upPin);
     
-    Serial.print(0);
-    Serial.print(',');
-    Serial.print(0);
-    Serial.print(',');
-    Serial.print(0);
-    Serial.print(',');
-    Serial.println(0);
-    
-    if (upVal == 1 && upButtonDown == false){
-      upButtonDown = true;
-      Serial.print(1);
-      Serial.print(',');
-      Serial.print(0);
-      Serial.print(',');
-      Serial.print(0);
-      Serial.print(',');
-      Serial.println(0);
+    if((characterPos != 0 || timer != 0) && (isTimeUp == false)){
+      timerCounter++;
+      if (timerCounter%60 == 0){
+        timer++;
+      }
+      if (timer == 15){
+        isTimeUp = true;
+      }
     }
-    if (upVal == 0 && upButtonDown == true){
-      upButtonDown = false;
-    }  
-
-    if (downVal == 1 && downButtonDown == false){
-      downButtonDown = true;
-      Serial.print(0);
-      Serial.print(',');
-      Serial.print(1);
+      
+      Serial.print(timer);
       Serial.print(',');
       Serial.print(0);
       Serial.print(',');
-      Serial.println(0);
-    }
-    if (downVal == 0 && downButtonDown == true){
-      downButtonDown = false;
-    }  
-
-    if (leftVal == 1 && leftButtonDown == false){
-      leftButtonDown = true;
-      Serial.print(0);
-      Serial.print(',');
-      Serial.print(0);
-      Serial.print(',');
-      Serial.print(1);
-      Serial.print(',');
-      Serial.println(0);
-    }
-    if (leftVal == 0 && leftButtonDown == true){
-      leftButtonDown = false;
-    }  
-
-    if (rightVal == 1 && rightButtonDown == false){
-      rightButtonDown = true;
       Serial.print(0);
       Serial.print(',');
       Serial.print(0);
       Serial.print(',');
       Serial.print(0);
       Serial.print(',');
-      Serial.println(1);
-
-    }
-    if (rightVal == 0 && rightButtonDown == true){
-      rightButtonDown = false;
-    }  
+      Serial.print(characterPos);
+      Serial.print(',');
+      Serial.print(whichMaze);
+      Serial.print(',');
+      Serial.print(numGoals);
+      Serial.print(',');
+      Serial.print(false);
+      Serial.print(',');
+      Serial.println(isTimeUp);
+  
+      if (characterPos == mazes[whichMaze-1].goal){
+        numGoals++;
+        Serial.print(timer);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(characterPos);
+        Serial.print(',');
+        Serial.print(whichMaze);
+        Serial.print(',');
+        Serial.print(numGoals);
+        Serial.print(',');
+        Serial.print(true);
+        Serial.print(',');
+        Serial.println(isTimeUp);
+        if(whichMaze != 5){
+          whichMaze = whichMaze+1;
+        }
+        else{
+          whichMaze = 1;
+        }
+      }
+      
+      
+      if (upVal == 1 && upButtonDown == false && characterPos - 8 > 0){
+        upButtonDown = true;
+        Serial.print(1);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.println(characterPos);
+        characterPos = characterPos - 8;
+      }
+      if (upVal == 0 && upButtonDown == true){
+        upButtonDown = false;
+      }  
+  
+      if (downVal == 1 && downButtonDown == false && characterPos + 8 < 63){
+        downButtonDown = true;
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(1);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.println(characterPos);
+        characterPos = characterPos + 8;
+      }
+      if (downVal == 0 && downButtonDown == true){
+        downButtonDown = false;
+      }  
+  
+      if (leftVal == 1 && leftButtonDown == false && characterPos % 8 != 0 ){
+        leftButtonDown = true;
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(1);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.println(characterPos);
+        characterPos--;
+      }
+      if (leftVal == 0 && leftButtonDown == true){
+        leftButtonDown = false;
+      }  
+  
+      if (rightVal == 1 && rightButtonDown == false && characterPos % 8 != 7){
+        rightButtonDown = true;
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(0);
+        Serial.print(',');
+        Serial.print(1);
+        Serial.print(',');
+        Serial.println(characterPos);
+        characterPos++;
+      }
+      if (rightVal == 0 && rightButtonDown == true){
+        rightButtonDown = false;
+      }  
 }
