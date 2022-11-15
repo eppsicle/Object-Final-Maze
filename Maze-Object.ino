@@ -97,8 +97,10 @@ void loop() {
       if (timerCounter%60 == 0){
         timer++;
       }
-      if (timer == 15){
+      if (timer == 60){
         isTimeUp = true;
+        characterPos = 0;
+        
       }
     }
       
@@ -152,18 +154,7 @@ void loop() {
       }
       
       
-      if (upVal == 1 && upButtonDown == false && characterPos - 8 >= 0){
-        //mazes[whichMaze-1].mazeArray 
-
-        bool emptySpaceExists = true; 
-        for(int i = 0; i<25; i++) {
-            if(characterPos - 8 == mazes[whichMaze-1].mazeArray[i]){
-              emptySpaceExists = false;
-              break;  
-            }
-          }
-
-        if(emptySpaceExists == true) {
+      if (upVal == 1 && upButtonDown == false && characterPos - 8 >= 0 && emptySpaceExists(characterPos-8, mazes[whichMaze-1].mazeArray)){
 
         upButtonDown = true;
         Serial.print(timer);
@@ -186,13 +177,13 @@ void loop() {
         Serial.print(',');
         Serial.println(isTimeUp);
         characterPos = characterPos - 8;
-        }
+        
       }
       if (upVal == 0 && upButtonDown == true){
         upButtonDown = false;
       }  
   
-      if (downVal == 1 && downButtonDown == false && characterPos + 8 <= 63){
+      if (downVal == 1 && downButtonDown == false && characterPos + 8 <= 63 && emptySpaceExists(characterPos+8, mazes[whichMaze-1].mazeArray)){
         downButtonDown = true;
         Serial.print(timer);
         Serial.print(',');
@@ -219,7 +210,7 @@ void loop() {
         downButtonDown = false;
       }  
   
-      if (leftVal == 1 && leftButtonDown == false && characterPos % 8 != 0 ){
+      if (leftVal == 1 && leftButtonDown == false && characterPos % 8 != 0 && emptySpaceExists(characterPos-1, mazes[whichMaze-1].mazeArray)){
         leftButtonDown = true;
         Serial.print(timer);
         Serial.print(',');
@@ -246,7 +237,7 @@ void loop() {
         leftButtonDown = false;
       }  
   
-      if (rightVal == 1 && rightButtonDown == false && characterPos % 8 != 7){
+      if (rightVal == 1 && rightButtonDown == false && characterPos % 8 != 7&& emptySpaceExists(characterPos+1, mazes[whichMaze-1].mazeArray)){
         rightButtonDown = true;
         Serial.print(timer);
         Serial.print(',');
