@@ -1,7 +1,7 @@
 //THIS IS THE FILE WHERE WE ARE TRYING TO GET THE PLAYER POSITION TO MATCH THE NEOPIXEL SYSTEM
 let serial;
 
-let increment = 65;
+let increment = 50;
 let playerX = increment;
 let playerY = 6*increment;
 
@@ -37,7 +37,7 @@ let maze5_y = [];
 let maze1 = [];
 
 function setup() {
- createCanvas(increment*9, increment*9);
+ createCanvas(increment*13,increment*9);
 
  serial = new p5.SerialPort();
 
@@ -105,16 +105,6 @@ function gotData() {
   if (currentString.length > 0) {
     //split at the comma
     let gameData = split(currentString, ",");
-
-    // //set variables equal to appropriate index of the array
-    // movedUp = int(gameData[1]);
-    // movedDown = int(gameData[2]);
-    // movedLeft = int(gameData[3]);
-    // movedRight = int(gameData[4]);
-    // // whichMaze = int(gameData[4]);
-    // // numGoals = int(gameData[5]);
-    // // isOnGoal = boolean(gameData[6]);
-    // // isTimeUp = boolean(gameData[7]);
     
     timer = int(gameData[0]);
     playerPos = int(gameData[1]);
@@ -134,6 +124,12 @@ function draw() {
   background("black");
   fill(255,255,255);
   strokeWeight = 1;
+  
+  textSize(30);
+  text("Time: " + timer, increment*9.5, increment*2);
+  text("Goals: " + numGoals, increment*9.5, increment*4);
+
+  
   // stroke(0,0,0);
   noStroke(); 
   
@@ -151,73 +147,13 @@ function draw() {
   for (let i = 0; i < mazes[whichMaze].length; i ++){
     rect((mazes[whichMaze][i] % 8)* increment + increment, (floor(mazes[whichMaze][i] / 8)) * increment +increment, increment, increment)
   }
-  fill(0,255,0);
+  fill("lightgreen");
   rect((isTimeUp % 8)* increment + increment, (floor(isTimeUp / 8)) * increment +increment, increment, increment)
-  
-  //loading a maze
-//   var emptySpace = true;
-//   let mazeLength = mazes[whichMaze][0].length;
-//   let chosenMazeX = mazes[whichMaze][0];
-//   let chosenMazeY = mazes[whichMaze][1];
-//   for(p = 0; p < mazeLength; p++){
-//     fill("black"); 
-//     rect(chosenMazeX[p], chosenMazeY[p], increment, increment);
-//   }
-  
-//   if (movedRight == 1 && playerX < 8*increment){
-//     for(p = 0; p < mazeLength; p++){ 
-//       if(chosenMazeX[p] == playerX + increment && chosenMazeY[p] == playerY) {
-//         emptySpace = false; 
-//         break;
-//       }
-//     }
-//     if(emptySpace) {
-//       playerX += increment;
-//     }  
-//   }
-  
-//   if (movedLeft == 1 && playerX > increment){
-//     for(p = 0; p < mazeLength; p++){ 
-//       if(chosenMazeX[p] == playerX - increment && chosenMazeY[p] == playerY) {
-//         emptySpace = false; 
-//         break;
-//       }
-//     }
-//     if(emptySpace) {
-//       playerX -= increment;
-//     }  
-//   }
-  
-//   if (movedUp == 1 && playerY > increment){
-//     for(p = 0; p < mazeLength; p++){ 
-//       if(chosenMazeX[p] == playerX && chosenMazeY[p] == playerY - increment) {
-//         emptySpace = false; 
-//         break;
-//       }
-//     }
-//     if(emptySpace) {
-//       playerY -= increment;
-//     }
-//   }
-  
-//   if (movedDown == 1 && playerY < 8*increment){
-//      for(p = 0; p < mazeLength; p++){ 
-//       if(chosenMazeX[p] == playerX && chosenMazeY[p] == playerY + increment) {
-//         emptySpace = false; 
-//         break;
-//       }
-//     }
-//     if(emptySpace) {
-//       playerY += increment;
-//     } 
-//   }
   
   
   fill("lightblue");
   ellipse(playerX, playerY, increment-15, increment-15);
   
-  
-  //console.log(movedDown);
 }
 
 function keyPressed(){
