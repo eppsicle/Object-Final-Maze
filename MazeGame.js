@@ -196,14 +196,15 @@ function gotData() {
     let gameData = split(currentString, ",");
 
     //set variables equal to appropriate index of the array
-    movedUp = int(gameData[0]);
-    movedDown = int(gameData[1]);
-    movedLeft = int(gameData[2]);
-    movedRight = int(gameData[3]);
-    // whichMaze = int(gameData[4]);
-    // numGoals = int(gameData[5]);
-    // isOnGoal = boolean(gameData[6]);
-    // isTimeUp = boolean(gameData[7]);
+    //timer = int(gameData[0]);
+    movedUp = int(gameData[1]);
+    movedDown = int(gameData[2]);
+    movedLeft = int(gameData[3]);
+    movedRight = int(gameData[4]);
+    // whichMaze = int(gameData[5]);
+    // numGoals = int(gameData[6]);
+    // isOnGoal = boolean(gameData[7]);
+    // isTimeUp = boolean(gameData[8]);
     // timer = int(gameData[8]);
     
   }
