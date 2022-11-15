@@ -42,7 +42,7 @@ function setup() {
  serial = new p5.SerialPort();
 
  serial.list();
- serial.open('/dev/tty.usbmodem142101');
+ serial.open('COM7');
   //serial.open('COM7');
 
  serial.on('connected', serverConnected);
@@ -59,113 +59,18 @@ function setup() {
   
   
   let i = increment; 
-  maze1_x = [2*i, 4*i, 5*i, 6*i,
-             2*i, 5*i,
-             2*i, 3*i, 5*i, 6*i,
-             6*i, 7*i,
-             1*i, 2*i, 4*i,
-             2*i, 4*i, 5*i, 6*i, 7*i,
-             2*i, 4*i,
-             4*i, 7*i, 8*i
-            ];
-  maze1_y = [1*i, 1*i, 1*i, 1*i,
-             2*i, 2*i,
-             3*i, 3*i, 3*i, 3*i,
-             4*i, 4*i,
-             5*i, 5*i, 5*i,
-             6*i, 6*i, 6*i, 6*i, 6*i,
-             7*i, 7*i,
-             8*i, 8*i, 8*i
-            ];
-  maze2_x = [1*i, 2*i, 3*i, 7*i,
-             5*i,
-             2*i, 3*i, 4*i, 5*i, 6*i, 7*i, 8*i,
-             6*i,
-             1*i, 2*i, 6*i,
-             2*i, 3*i, 4*i,
-             4*i, 5*i, 6*i, 7*i
-            ];
-  maze2_y = [1*i, 1*i, 1*i, 1*i,
-             2*i,
-             3*i, 3*i, 3*i, 3*i, 3*i, 3*i, 3*i,
-             4*i,
-             5*i, 5*i, 5*i,
-             6*i, 6*i, 6*i,
-             7*i, 7*i, 7*i, 7*i
-            ];
-  maze3_x = [1*i, 8*i,
-             1*i, 2*i, 3*i, 4*i, 7*i, 8*i,
-             2*i,
-             2*i, 4*i, 5*i, 7*i,
-             4*i, 5*i, 6*i, 7*i,
-             2*i, 4*i,
-             1*i, 2*i, 3*i, 4*i, 7*i, 8*i,
-             8*i
-            ];
-  maze3_y = [1*i, 1*i,
-             2*i, 2*i, 2*i, 2*i, 2*i, 2*i,
-             3*i,
-             4*i, 4*i, 4*i, 4*i,
-             5*i, 5*i, 5*i, 5*i,
-             6*i, 6*i,
-             7*i, 7*i, 7*i, 7*i, 7*i, 7*i,
-             8*i
-            ];
-  maze4_x = [4*i, 6*i, 8*i,
-             2*i, 4*i,
-             2*i, 4*i, 6*i, 7*i,
-             2*i, 4*i, 6*i,
-             1*i, 2*i, 6*i,
-             5*i, 6*i, 7*i,
-             1*i, 2*i, 3*i, 6*i,
-             6*i
-            ];
-  maze4_y = [1*i, 1*i, 1*i,
-             2*i, 2*i,
-             3*i, 3*i, 3*i, 3*i,
-             4*i, 4*i, 4*i,
-             5*i, 5*i, 5*i,
-             6*i, 6*i, 6*i,
-             7*i, 7*i, 7*i, 7*i,
-             8*i
-            ];
-  maze5_x = [2*i,
-             2*i, 3*i, 5*i, 8*i,
-             3*i, 5*i, 7*i, 8*i,
-             5*i,
-             2*i, 3*i, 4*i, 5*i, 6*i, 7*i,
-             2*i, 7*i,
-             4*i, 7*i,
-             1*i, 2*i, 3*i, 4*i, 6*i, 7*i
-            ];
-  maze5_y = [1*i,
-             2*i, 2*i, 2*i, 2*i,
-             3*i, 3*i, 3*i, 3*i,
-             4*i,
-             5*i, 5*i, 5*i, 5*i, 5*i, 5*i,
-             6*i, 6*i,
-             7*i, 7*i,
-             8*i, 8*i, 8*i, 8*i, 8*i, 8*i
-            ];
-  
-  wallInfo = [maze1_x, maze1_y,
-              maze2_x, maze2_y,
-              maze3_x, maze3_y, 
-              maze4_x, maze4_y, 
-              maze5_x, maze5_y]; 
   
   maze1 = [1, 3, 4, 5, 9, 12, 17, 18, 20, 21, 29, 30, 32, 33, 35, 41, 43, 44, 45, 46, 49, 51, 59, 62, 63];
+  maze2 = [0, 1, 2, 6, 12, 17, 18, 19, 20, 21, 22, 23, 29, 32, 33, 37, 41, 42, 43, 51, 52, 53, 54];
+maze3 = [0, 7, 8, 9, 10, 11, 14, 15, 17, 25, 27, 28, 30, 35, 36, 37, 38, 41, 43, 48, 49, 50, 51, 54, 55, 63];
+maze4 = [3, 5, 7, 9, 11, 17, 19, 21, 22, 25, 27, 29, 32, 33, 37, 44, 45, 46, 48, 49, 50, 53, 61];
+maze5 = [1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 51, 54, 56, 57, 58, 59, 61, 62];
   
-   
-  let mazeNum = 0;
-  for(a = 0; a < wallInfo.length; a +=2) {
-    mazes[mazeNum] = [];
-    mazes[mazeNum][0] = wallInfo[a];
-    mazes[mazeNum][1] = wallInfo[a + 1];
-    mazeNum ++; 
-  }
-  // print(mazes); 
-  
+  mazes[0] = maze1;
+  mazes[1] = maze2;
+  mazes[2] = maze3;
+  mazes[3] = maze4;
+  mazes[4] = maze5;
 }
 
 function serverConnected() {
@@ -243,9 +148,11 @@ function draw() {
   }
   
   fill(0,0,0);
-  for (let i = 0; i < maze1.length; i ++){
-    rect((maze1[i] % 8)* increment + increment, (floor(maze1[i] / 8)) * increment +increment, increment, increment)
+  for (let i = 0; i < mazes[whichMaze].length; i ++){
+    rect((mazes[whichMaze][i] % 8)* increment + increment, (floor(mazes[whichMaze][i] / 8)) * increment +increment, increment, increment)
   }
+  fill(0,255,0);
+  rect((isTimeUp % 8)* increment + increment, (floor(isTimeUp / 8)) * increment +increment, increment, increment)
   
   //loading a maze
 //   var emptySpace = true;
