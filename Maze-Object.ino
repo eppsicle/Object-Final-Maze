@@ -10,7 +10,7 @@ int upVal = 0;
 struct maze{
   int mazeNumber;
   int goal;
-  char mazeArray[64];
+  int mazeArray[64];
 };
 
 int timer = 0;
@@ -33,6 +33,8 @@ maze maze1 = {1, 7, {1, 3, 4, 5, 9, 12, 17, 18, 20, 21, 29, 30, 32, 33, 35, 41, 
   maze maze4 = {4, 63, {3, 5, 7, 9, 11, 17, 19, 21, 22, 25, 27, 29, 32, 33, 37, 44, 45, 46, 48, 49, 50, 53, 61}};
   maze maze5 = {5, 0, {1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 51, 54, 56, 57, 58, 59, 61, 62}};
   maze mazes[5] = {maze1, maze2, maze3, maze4, maze5};
+
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -75,6 +77,15 @@ maze mazes[5] = {maze1, maze2, maze3, maze4, maze5};
 */
 }
 
+bool emptySpaceExists(int position, int walls[]){
+  for(int i = 0; i<25; i++) {
+    if(position == walls[i]){
+      return false; 
+    }
+  }
+return true;   
+}
+
 void loop() {
     downVal = digitalRead(downPin);
     rightVal = digitalRead(rightPin);
@@ -91,15 +102,15 @@ void loop() {
       }
     }
       
-      Serial.print(timer);
+      Serial.print(timer); // time
       Serial.print(',');
-      Serial.print(0);
+      Serial.print(0); // up
       Serial.print(',');
-      Serial.print(0);
+      Serial.print(0); // down
       Serial.print(',');
-      Serial.print(0);
+      Serial.print(0); // left
       Serial.print(',');
-      Serial.print(0);
+      Serial.print(0); // right
       Serial.print(',');
       Serial.print(characterPos);
       Serial.print(',');
@@ -107,7 +118,7 @@ void loop() {
       Serial.print(',');
       Serial.print(numGoals);
       Serial.print(',');
-      Serial.print(false);
+      Serial.print(false); // have you reached goal
       Serial.print(',');
       Serial.println(isTimeUp);
   
@@ -141,8 +152,22 @@ void loop() {
       }
       
       
-      if (upVal == 1 && upButtonDown == false && characterPos - 8 > 0){
+      if (upVal == 1 && upButtonDown == false && characterPos - 8 >= 0){
+        //mazes[whichMaze-1].mazeArray 
+
+        bool emptySpaceExists = true; 
+        for(int i = 0; i<25; i++) {
+            if(characterPos - 8 == mazes[whichMaze-1].mazeArray[i]){
+              emptySpaceExists = false;
+              break;  
+            }
+          }
+
+        if(emptySpaceExists == true) {
+
         upButtonDown = true;
+        Serial.print(timer);
+        Serial.print(',');
         Serial.print(1);
         Serial.print(',');
         Serial.print(0);
@@ -151,15 +176,26 @@ void loop() {
         Serial.print(',');
         Serial.print(0);
         Serial.print(',');
-        Serial.println(characterPos);
+        Serial.print(characterPos);
+        Serial.print(',');
+        Serial.print(whichMaze);
+        Serial.print(',');
+        Serial.print(numGoals);
+        Serial.print(',');
+        Serial.print(true);
+        Serial.print(',');
+        Serial.println(isTimeUp);
         characterPos = characterPos - 8;
+        }
       }
       if (upVal == 0 && upButtonDown == true){
         upButtonDown = false;
       }  
   
-      if (downVal == 1 && downButtonDown == false && characterPos + 8 < 63){
+      if (downVal == 1 && downButtonDown == false && characterPos + 8 <= 63){
         downButtonDown = true;
+        Serial.print(timer);
+        Serial.print(',');
         Serial.print(0);
         Serial.print(',');
         Serial.print(1);
@@ -168,7 +204,15 @@ void loop() {
         Serial.print(',');
         Serial.print(0);
         Serial.print(',');
-        Serial.println(characterPos);
+        Serial.print(characterPos);
+        Serial.print(',');
+        Serial.print(whichMaze);
+        Serial.print(',');
+        Serial.print(numGoals);
+        Serial.print(',');
+        Serial.print(true);
+        Serial.print(',');
+        Serial.println(isTimeUp);
         characterPos = characterPos + 8;
       }
       if (downVal == 0 && downButtonDown == true){
@@ -177,6 +221,8 @@ void loop() {
   
       if (leftVal == 1 && leftButtonDown == false && characterPos % 8 != 0 ){
         leftButtonDown = true;
+        Serial.print(timer);
+        Serial.print(',');
         Serial.print(0);
         Serial.print(',');
         Serial.print(0);
@@ -185,7 +231,15 @@ void loop() {
         Serial.print(',');
         Serial.print(0);
         Serial.print(',');
-        Serial.println(characterPos);
+        Serial.print(characterPos);
+        Serial.print(',');
+        Serial.print(whichMaze);
+        Serial.print(',');
+        Serial.print(numGoals);
+        Serial.print(',');
+        Serial.print(true);
+        Serial.print(',');
+        Serial.println(isTimeUp);
         characterPos--;
       }
       if (leftVal == 0 && leftButtonDown == true){
@@ -194,6 +248,8 @@ void loop() {
   
       if (rightVal == 1 && rightButtonDown == false && characterPos % 8 != 7){
         rightButtonDown = true;
+        Serial.print(timer);
+        Serial.print(',');
         Serial.print(0);
         Serial.print(',');
         Serial.print(0);
@@ -202,7 +258,15 @@ void loop() {
         Serial.print(',');
         Serial.print(1);
         Serial.print(',');
-        Serial.println(characterPos);
+        Serial.print(characterPos);
+        Serial.print(',');
+        Serial.print(whichMaze);
+        Serial.print(',');
+        Serial.print(numGoals);
+        Serial.print(',');
+        Serial.print(true);
+        Serial.print(',');
+        Serial.println(isTimeUp);
         characterPos++;
       }
       if (rightVal == 0 && rightButtonDown == true){
