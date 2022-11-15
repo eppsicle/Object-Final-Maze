@@ -92,15 +92,16 @@ void loop() {
     leftVal = digitalRead(leftPin);
     upVal = digitalRead(upPin);
     
-    if((characterPos != 0 || timer != 0) && (isTimeUp == false)){
+    if((characterPos != 0 || timer != 0)){
       timerCounter++;
       if (timerCounter%60 == 0){
         timer++;
       }
       if (timer == 60){
-        isTimeUp = true;
         characterPos = 0;
         whichMaze = 0;
+        timer = 0;
+        numGoals = 0;
       }
     }
       
@@ -122,7 +123,9 @@ void loop() {
       Serial.print(',');
       Serial.print(false); // have you reached goal
       Serial.print(',');
-      Serial.println(isTimeUp);
+      Serial.println(mazes[whichMaze].goal);
+      
+      
   
       if (characterPos == mazes[whichMaze].goal){
         numGoals++;
@@ -144,7 +147,7 @@ void loop() {
         Serial.print(',');
         Serial.print(true);
         Serial.print(',');
-        Serial.println(isTimeUp);
+        Serial.println(mazes[whichMaze].goal);
         if(whichMaze != 4){
           whichMaze = whichMaze+1;
         }
@@ -175,7 +178,7 @@ void loop() {
         Serial.print(',');
         Serial.print(true);
         Serial.print(',');
-        Serial.println(isTimeUp);
+        Serial.println(mazes[whichMaze].goal);
         characterPos = characterPos - 8;
         
       }
@@ -203,7 +206,7 @@ void loop() {
         Serial.print(',');
         Serial.print(true);
         Serial.print(',');
-        Serial.println(isTimeUp);
+        Serial.println(mazes[whichMaze].goal);
         characterPos = characterPos + 8;
       }
       if (downVal == 0 && downButtonDown == true){
@@ -230,7 +233,7 @@ void loop() {
         Serial.print(',');
         Serial.print(true);
         Serial.print(',');
-        Serial.println(isTimeUp);
+        Serial.println(mazes[whichMaze].goal);
         characterPos--;
       }
       if (leftVal == 0 && leftButtonDown == true){
@@ -257,7 +260,7 @@ void loop() {
         Serial.print(',');
         Serial.print(true);
         Serial.print(',');
-        Serial.println(isTimeUp);
+        Serial.println(mazes[whichMaze].goal);
         characterPos++;
       }
       if (rightVal == 0 && rightButtonDown == true){
