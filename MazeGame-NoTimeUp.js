@@ -17,7 +17,8 @@ let numGoals = 0;
 let isOnGoal = 0;
 let goalPos = 0;
 let timer = 0;
-let switchTime = false;
+let switchTime = 0;
+let switched = false;
 let switchTimer = 0;
 
 //initialize 2D array that stores the positions of the wall for each maze
@@ -30,7 +31,7 @@ function setup() {
  serial = new p5.SerialPort();
 
  serial.list();
- serial.open('COM7');
+ serial.open('COM4');
   //serial.open('COM7');
 
  serial.on('connected', serverConnected);
@@ -101,8 +102,8 @@ function gotData() {
     playerPos = int(gameData[1]);
     whichMaze = int(gameData[2]);
     numGoals = int(gameData[3]);
-    goalPos = int(gameData[4]);
-    switchTime = boolean(gameData[5]);
+    goalPos = int(gameData[5]);
+    switchTime = int(gameData[6]);
     
   }
   trim(currentString);
@@ -110,9 +111,21 @@ function gotData() {
   latestData = currentString;
 }
 
+function switchTimeFunction(){
+    clear();
+    fill(255, 0,0);
+    switchTimer += 1;
+    text(floor(switchTimer/60), 5* increment, 5*increment);
+  
+}
+
 function draw() {
-  
-  
+  //console.log(switchTime);
+  if(switchTime == 1){
+    console.log("LMAO");
+    switchTimeFunction();
+  }
+  else{
   //set drawing style
   clear();
   background("black");
@@ -142,6 +155,7 @@ function draw() {
   
   //draw the black squares that demarcate the walls of the maze
   fill(0,0,0);
+  //console.log(whichMaze);
   for (let i = 0; i < mazes[whichMaze].length; i ++){
     rect((mazes[whichMaze][i] % 8)* increment + increment, (floor(mazes[whichMaze][i] / 8)) * increment +increment, increment, increment)
   }
@@ -154,10 +168,7 @@ function draw() {
   fill("lightblue");
   ellipse(playerX, playerY, increment-15, increment-15);
   
-  if(switchTime){
-    fill(255,255,255);
-    switchTimer ++;
-    text(floor(switchTimer/60), 5* increment, 5*increment)
+
   }
   
 }
