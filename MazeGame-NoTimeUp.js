@@ -18,7 +18,6 @@ let isOnGoal = 0;
 let goalPos = 0;
 let timer = 0;
 let switchTime = false;
-let switched = false;
 let switchTimer = 0;
 
 //initialize 2D array that stores the positions of the wall for each maze
@@ -157,7 +156,7 @@ function draw() {
   
   if(switchTime){
     fill(255,255,255);
-    switchTimer += 1;
+    switchTimer ++;
     text(floor(switchTimer/60), 5* increment, 5*increment)
   }
   
