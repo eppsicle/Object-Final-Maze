@@ -34,7 +34,7 @@ bool rightButtonDown = false;
 bool upButtonDown = false;
 int characterPos = 0;
 
-int whichMaze = 3;
+int whichMaze = 0;
 int numGoals = 0;
 bool isOnGoal = false;
 bool isTimeUp = false;
@@ -108,7 +108,7 @@ void loop() {
       }
       if (timer == 0){
         characterPos = 0;
-        whichMaze = 3;
+        whichMaze = 0;
         timer = 120;
         numGoals = 0;
       }
