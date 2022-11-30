@@ -21,6 +21,12 @@ let switchTime = 0;
 let switched = false;
 let switchTimer = 0;
 
+
+let expand = false; //determines when to animate rect
+
+let rectSize = 50;  //increment
+let opacity = 0; 
+
 //initialize 2D array that stores the positions of the wall for each maze
 let mazes = [];
  
@@ -31,8 +37,9 @@ function setup() {
  serial = new p5.SerialPort();
 
  serial.list();
- serial.open('COM4');
+ //serial.open('COM4');
   //serial.open('COM7');
+        serial.open('/dev/tty.usbmodem142101')
 
  serial.on('connected', serverConnected);
 
@@ -102,6 +109,7 @@ function gotData() {
     playerPos = int(gameData[1]);
     whichMaze = int(gameData[2]);
     numGoals = int(gameData[3]);
+    isOnGoal = int(gameData[4]);
     goalPos = int(gameData[5]);
     switchTime = int(gameData[6]);
     
@@ -119,6 +127,16 @@ function switchTimeFunction(){
   
 }
 
+function animateRect(){
+  //fill(144, 238, 144 ,255-opacity);
+  fill(144, 144, 0,255-opacity);
+  rect(playerX, playerY,rectSize, rectSize);
+  // 200s should be replaced with the player position
+    
+    rectSize+=10;
+    opacity +=20; 
+}
+
 function draw() {
   //console.log(switchTime);
   if(switchTime == 1){
@@ -128,6 +146,7 @@ function draw() {
   else{
   //set drawing style
   clear();
+  switchTimer = 0;
   background("black");
   fill(255,255,255);
   strokeWeight = 1;
@@ -168,7 +187,21 @@ function draw() {
   fill("lightblue");
   ellipse(playerX, playerY, increment-15, increment-15);
   
-
-  }
   
+  if (isOnGoal == 1){
+    //reachedGoal
+    rectMode(CENTER); 
+    noStroke();
+    expand = true;  
+    
+    if(expand){
+      animateRect();
+    }
+    if(opacity > 255){
+      rectSize = 30;
+      opacity = 0; 
+      expand = false; 
+    }
+  }
+}
 }
