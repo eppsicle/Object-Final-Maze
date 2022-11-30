@@ -111,6 +111,10 @@ void loop() {
         whichMaze = 0;
         timer = 120;
         numGoals = 0;
+        for (int i = 0; i < 64; i++){
+          strip.setPixelColor(i, 0, 0, 0);
+        }
+        strip.show();
       }
     }
       
@@ -122,7 +126,7 @@ void loop() {
       Serial.print(',');
       Serial.print(numGoals);
       Serial.print(',');
-      Serial.print(false); // have you reached goal
+      Serial.print(0); // have you reached goal
       Serial.print(',');
       Serial.print(mazes[whichMaze].goal);
       Serial.print(',');
@@ -145,7 +149,7 @@ void loop() {
         Serial.print(',');
         Serial.print(numGoals);
         Serial.print(',');
-        Serial.print(true);
+        Serial.print(1);
         Serial.print(',');
         Serial.print(mazes[whichMaze].goal);
         Serial.print(',');
@@ -173,7 +177,7 @@ void loop() {
         Serial.print(',');
         Serial.print(numGoals);
         Serial.print(',');
-        Serial.print(true);
+        Serial.print(0);
         Serial.print(',');
         Serial.print(mazes[whichMaze].goal);
         Serial.print(',');
@@ -197,7 +201,7 @@ void loop() {
         Serial.print(',');
         Serial.print(numGoals);
         Serial.print(',');
-        Serial.print(true);
+        Serial.print(0);
         Serial.print(',');
          Serial.print(mazes[whichMaze].goal);
       Serial.print(',');
@@ -220,7 +224,7 @@ void loop() {
         Serial.print(',');
         Serial.print(numGoals);
         Serial.print(',');
-        Serial.print(true);
+        Serial.print(0);
         Serial.print(',');
         Serial.print(mazes[whichMaze].goal);
         Serial.print(',');
@@ -243,7 +247,7 @@ void loop() {
         Serial.print(',');
         Serial.print(numGoals);
         Serial.print(',');
-        Serial.print(true);
+        Serial.print(0);
         Serial.print(',');
          Serial.print(mazes[whichMaze].goal);
       Serial.print(',');
