@@ -75,7 +75,6 @@ maze5 = [1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 5
   vid.position(0, 0);
   vid.hide();
   vid.pause();
-  
 }
 
 function serverConnected() {
@@ -126,7 +125,6 @@ function gotData() {
   latestData = currentString;
 }
 
-let tester = 0;
 
 function switchTimeFunction(){
     console.log("Switch Time");
@@ -147,12 +145,13 @@ function animateRect(){
 function draw() {
   //console.log(switchTime);
   if(switchTime == 1){
-    console.log("LMAO");
-    switchTimeFunction();
+    //console.log("LMAO");
     vid.play();
+    switchTimeFunction();
   }
   else{
-  vid.hide();
+    vid.stop();
+    vid.hide();
   //set drawing style
   clear();
   switchTimer = 0;
