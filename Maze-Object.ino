@@ -132,6 +132,9 @@ void loop() {
   
       if (characterPos == mazes[whichMaze].goal){
         numGoals++;
+        for (int i = 0; i < 64; i++){
+          strip.setPixelColor(i, 0, 0, 0);
+        }
         strip.setPixelColor(mazes[whichMaze].goal, 0, 0, 0);
         strip.show();
         Serial.print(timer);
