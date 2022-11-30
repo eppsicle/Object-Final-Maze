@@ -21,6 +21,7 @@ let switchTime = 0;
 let switched = false;
 let switchTimer = 0;
 
+let vid;
 
 let expand = false; //determines when to animate rect
 
@@ -29,7 +30,6 @@ let opacity = 0;
 
 //initialize 2D array that stores the positions of the wall for each maze
 let mazes = [];
- 
 
 function setup() {
  createCanvas(increment*13,increment*9);
@@ -39,7 +39,7 @@ function setup() {
  serial.list();
  //serial.open('COM4');
   //serial.open('COM7');
-        serial.open('/dev/tty.usbmodem142101')
+        serial.open('COM7')
 
  serial.on('connected', serverConnected);
 
@@ -69,6 +69,13 @@ maze5 = [1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 5
   mazes[2] = maze3;
   mazes[3] = maze4;
   mazes[4] = maze5;
+
+  vid = createVideo('SwitchPage.mp4');
+  vid.size(increment*13,increment*9);
+  vid.position(0, 0);
+  vid.hide();
+  vid.pause();
+  
 }
 
 function serverConnected() {
@@ -119,12 +126,12 @@ function gotData() {
   latestData = currentString;
 }
 
+let tester = 0;
+
 function switchTimeFunction(){
+    console.log("Switch Time");
     clear();
-    fill(255, 0,0);
-    switchTimer += 1;
-    text(floor(switchTimer/60), 5* increment, 5*increment);
-  
+    vid.show();   
 }
 
 function animateRect(){
@@ -142,8 +149,10 @@ function draw() {
   if(switchTime == 1){
     console.log("LMAO");
     switchTimeFunction();
+    vid.play();
   }
   else{
+  vid.hide();
   //set drawing style
   clear();
   switchTimer = 0;
@@ -203,5 +212,7 @@ function draw() {
       expand = false; 
     }
   }
+  
 }
+
 }
