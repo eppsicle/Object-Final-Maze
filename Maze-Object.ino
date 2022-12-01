@@ -86,7 +86,13 @@ void timeToSwitch(){
     Serial.print(',');
     Serial.println(true);
     miniTimer++;
+    strip.setPixelColor(floor(miniTimer/4.6875), 255, 0, 0);
+    strip.show();
   }
+  for (int i = 0; i < 64; i++){
+    strip.setPixelColor(i, 0, 0, 0);
+  }
+  strip.show();
 }
 
 
