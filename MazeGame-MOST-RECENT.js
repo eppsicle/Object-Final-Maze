@@ -37,7 +37,8 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(increment * 13, increment * 9);
+  createCanvas(windowWidth,windowHeight); 
+  increment = windowHeight/9;
 
   serial = new p5.SerialPort();
 
@@ -274,6 +275,8 @@ function animateRect() {
 
 let keepScore = 0;
 function draw() {
+  createCanvas(windowWidth,windowHeight); 
+  increment = windowHeight/9;
   if (timer == 120) {
     //console.log(timer);
     image(img, 0, 0, increment * 13, increment * 9);
@@ -294,9 +297,9 @@ function draw() {
       strokeWeight = 1;
 
       //display the timer and goals
-      textSize(30);
-      text("Time: " + timer, increment * 9.5, increment * 2);
-      text("Goals: " + numGoals, increment * 9.5, increment * 4);
+      textSize(windowHeight/10);
+      text("Time: " + timer, increment * 9.5, increment * 3);
+      text("Goals: " + numGoals, increment * 9.5, increment * 5);
 
       // stroke(0,0,0);
       noStroke();
@@ -352,5 +355,11 @@ function draw() {
         expand = false;
       }
     }
+  }
+}
+function mousePressed() {
+  if (mouseX > 0 && mouseX < windowWidth && mouseY > 0 && mouseY < windowHeight) {
+    let fs = fullscreen();
+    fullscreen(!fs);
   }
 }
