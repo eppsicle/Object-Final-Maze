@@ -6,7 +6,7 @@ let increment = 50;
 
 //initialize variables for the position of the player
 let playerX = increment;
-let playerY = 6*increment;
+let playerY = 6 * increment;
 let playerPos = 0;
 
 //initialize a variable for communicating between arduino and p5 about which maze is being displayed
@@ -25,44 +25,176 @@ let vid;
 
 let expand = false; //determines when to animate rect
 
-let rectSize = 50;  //increment
-let opacity = 0; 
+let rectSize = 50; //increment
+let opacity = 0;
 
 //initialize 2D array that stores the positions of the wall for each maze
 let mazes = [];
 
+let img;
+function preload() {
+  img = loadImage("final-project-logo.png");
+}
+
 function setup() {
- createCanvas(increment*13,increment*9);
+  createCanvas(increment * 13, increment * 9);
 
- serial = new p5.SerialPort();
+  serial = new p5.SerialPort();
 
- serial.list();
- //serial.open('COM4');
+  serial.list();
+  //serial.open('COM4');
   //serial.open('COM7');
-        serial.open('COM7')
+  serial.open("COM7");
 
- serial.on('connected', serverConnected);
+  serial.on("connected", serverConnected);
 
- serial.on('list', gotList);
+  serial.on("list", gotList);
 
- serial.on('data', gotData);
+  serial.on("data", gotData);
 
- serial.on('error', gotError);
+  serial.on("error", gotError);
 
- serial.on('open', gotOpen);
+  serial.on("open", gotOpen);
 
- serial.on('close', gotClose);
-  
-  
-  let i = increment; 
-  
+  serial.on("close", gotClose);
+
+  let i = increment;
+
   //arrays that store the positions of the walls for each maze, starting at the top left corner with 0 and going right and down towards 63 in the bottom right corner
-  maze1 = [1, 3, 4, 5, 9, 12, 17, 18, 20, 21, 29, 30, 32, 33, 35, 41, 43, 44, 45, 46, 49, 51, 59, 62, 63];
-  maze2 = [0, 1, 2, 6, 12, 17, 18, 19, 20, 21, 22, 23, 29, 32, 33, 37, 41, 42, 43, 51, 52, 53, 54];
-maze3 = [0, 7, 8, 9, 10, 11, 14, 15, 17, 25, 27, 28, 30, 35, 36, 37, 38, 41, 43, 48, 49, 50, 51, 54, 55, 63];
-maze4 = [3, 5, 7, 9, 11, 17, 19, 21, 22, 25, 27, 29, 32, 33, 37, 44, 45, 46, 48, 49, 50, 53, 61];
-maze5 = [1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 51, 54, 56, 57, 58, 59, 61, 62];
-  
+  maze1 = [
+    1,
+    3,
+    4,
+    5,
+    9,
+    12,
+    17,
+    18,
+    20,
+    21,
+    29,
+    30,
+    32,
+    33,
+    35,
+    41,
+    43,
+    44,
+    45,
+    46,
+    49,
+    51,
+    59,
+    62,
+    63,
+  ];
+  maze2 = [
+    0,
+    1,
+    2,
+    6,
+    12,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    29,
+    32,
+    33,
+    37,
+    41,
+    42,
+    43,
+    51,
+    52,
+    53,
+    54,
+  ];
+  maze3 = [
+    0,
+    7,
+    8,
+    9,
+    10,
+    11,
+    14,
+    15,
+    17,
+    25,
+    27,
+    28,
+    30,
+    35,
+    36,
+    37,
+    38,
+    41,
+    43,
+    48,
+    49,
+    50,
+    51,
+    54,
+    55,
+    63,
+  ];
+  maze4 = [
+    3,
+    5,
+    7,
+    9,
+    11,
+    17,
+    19,
+    21,
+    22,
+    25,
+    27,
+    29,
+    32,
+    33,
+    37,
+    44,
+    45,
+    46,
+    48,
+    49,
+    50,
+    53,
+    61,
+  ];
+  maze5 = [
+    1,
+    9,
+    10,
+    12,
+    15,
+    18,
+    20,
+    22,
+    23,
+    28,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    41,
+    46,
+    51,
+    54,
+    56,
+    57,
+    58,
+    59,
+    61,
+    62,
+  ];
+
   //place the mazes into the maze 2D array
   mazes[0] = maze1;
   mazes[1] = maze2;
@@ -70,36 +202,36 @@ maze5 = [1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 5
   mazes[3] = maze4;
   mazes[4] = maze5;
 
-  vid = createVideo('SwitchPage.mp4');
-  vid.size(increment*13,increment*9);
+  vid = createVideo("SwitchPage.mp4");
+  vid.size(increment * 13, increment * 9);
   vid.position(0, 0);
   vid.hide();
   vid.pause();
 }
 
 function serverConnected() {
- print("Connected to Server");
+  print("Connected to Server");
 }
 
 function gotList(thelist) {
- print("List of Serial Ports:");
+  print("List of Serial Ports:");
 
- for (let i = 0; i < thelist.length; i++) {
-  print(i + " " + thelist[i]);
- }
+  for (let i = 0; i < thelist.length; i++) {
+    print(i + " " + thelist[i]);
+  }
 }
 
 function gotOpen() {
- print("Serial Port is Open");
+  print("Serial Port is Open");
 }
 
-function gotClose(){
- print("Serial Port is Closed");
- latestData = "Serial Port is Closed";
+function gotClose() {
+  print("Serial Port is Closed");
+  latestData = "Serial Port is Closed";
 }
 
 function gotError(theerror) {
- print(theerror);
+  print(theerror);
 }
 
 function gotData() {
@@ -109,7 +241,7 @@ function gotData() {
   if (currentString.length > 0) {
     //split at the comma
     let gameData = split(currentString, ",");
-    
+
     //take in information on timer, player position, etc.
     timer = int(gameData[0]);
     playerPos = int(gameData[1]);
@@ -118,100 +250,107 @@ function gotData() {
     isOnGoal = int(gameData[4]);
     goalPos = int(gameData[5]);
     switchTime = int(gameData[6]);
-    
   }
   trim(currentString);
   if (!currentString) return;
   latestData = currentString;
 }
 
-
-function switchTimeFunction(){
-    console.log("Switch Time");
-    clear();
-    vid.show();   
-}
-
-function animateRect(){
-  //fill(144, 238, 144 ,255-opacity);
-  fill(144, 144, 0,255-opacity);
-  rect(playerX, playerY,rectSize, rectSize);
-  // 200s should be replaced with the player position
-    
-    rectSize+=10;
-    opacity +=20; 
-}
-
-function draw() {
-  //console.log(switchTime);
-  if(switchTime == 1){
-    //console.log("LMAO");
-    vid.play();
-    switchTimeFunction();
-  }
-  else{
-    vid.stop();
-    vid.hide();
-  //set drawing style
+function switchTimeFunction() {
+  console.log("Switch Time");
   clear();
-  switchTimer = 0;
-  background("black");
-  fill(255,255,255);
-  strokeWeight = 1;
-  
-  //display the timer and goals
-  textSize(30);
-  text("Time: " + timer, increment*9.5, increment*2);
-  text("Goals: " + numGoals, increment*9.5, increment*4);
-
-  
-  // stroke(0,0,0);
-  noStroke(); 
-  
-  //calculate the player's x and y position from the player position value that ranges from 0 to 63
-  playerX = (playerPos % 8) * increment + increment;
-  playerY = (floor(playerPos / 8)) * increment + increment;
-  
-  //draw the white background rectangle
-  rectMode(CENTER);
-  for (x = 1; x < 9; x++){
-    for (y = 1; y < 9; y++){
-      rect(x * increment, y * increment, increment, increment)
-    }
-  }
-  
-  //draw the black squares that demarcate the walls of the maze
-  fill(0,0,0);
-  //console.log(whichMaze);
-  for (let i = 0; i < mazes[whichMaze].length; i ++){
-    rect((mazes[whichMaze][i] % 8)* increment + increment, (floor(mazes[whichMaze][i] / 8)) * increment +increment, increment, increment)
-  }
-  
-  //draw the goal
-  fill("lightgreen");
-  rect((goalPos % 8)* increment + increment, (floor(goalPos / 8)) * increment +increment, increment, increment)
-  
-  //draw the player
-  fill("lightblue");
-  ellipse(playerX, playerY, increment-15, increment-15);
-  
-  
-  if (isOnGoal == 1){
-    //reachedGoal
-    rectMode(CENTER); 
-    noStroke();
-    expand = true;  
-    
-    if(expand){
-      animateRect();
-    }
-    if(opacity > 255){
-      rectSize = 30;
-      opacity = 0; 
-      expand = false; 
-    }
-  }
-  
+  vid.show();
 }
 
+function animateRect() {
+  fill(144, 238, 144, 255 - opacity);
+  // fill(144, 144, 0,255-opacity);
+  rect(playerX, playerY, rectSize, rectSize);
+  // 200s should be replaced with the player position
+
+  rectSize += 10;
+  opacity += 20;
+}
+
+let keepScore = 0;
+function draw() {
+  if (timer == 120) {
+    //console.log(timer);
+    image(img, 0, 0, increment * 13, increment * 9);
+  } else {
+    //console.log(switchTime);
+    if (switchTime == 1) {
+      //console.log("LMAO");
+      vid.play();
+      switchTimeFunction();
+    } else {
+      vid.stop();
+      vid.hide();
+      //set drawing style
+      clear();
+      switchTimer = 0;
+      background("black");
+      fill(255, 255, 255);
+      strokeWeight = 1;
+
+      //display the timer and goals
+      textSize(30);
+      text("Time: " + timer, increment * 9.5, increment * 2);
+      text("Goals: " + numGoals, increment * 9.5, increment * 4);
+
+      // stroke(0,0,0);
+      noStroke();
+
+      //calculate the player's x and y position from the player position value that ranges from 0 to 63
+      playerX = (playerPos % 8) * increment + increment;
+      playerY = floor(playerPos / 8) * increment + increment;
+
+      //draw the white background rectangle
+      rectMode(CENTER);
+      for (x = 1; x < 9; x++) {
+        for (y = 1; y < 9; y++) {
+          rect(x * increment, y * increment, increment, increment);
+        }
+      }
+
+      //draw the black squares that demarcate the walls of the maze
+      fill(0, 0, 0);
+      //console.log(whichMaze);
+      for (let i = 0; i < mazes[whichMaze].length; i++) {
+        rect(
+          (mazes[whichMaze][i] % 8) * increment + increment,
+          floor(mazes[whichMaze][i] / 8) * increment + increment,
+          increment,
+          increment
+        );
+      }
+
+      //draw the goal
+      fill(0, 255, 0, 0);
+      rect(
+        (goalPos % 8) * increment + increment,
+        floor(goalPos / 8) * increment + increment,
+        increment,
+        increment
+      );
+
+      //draw the player
+      fill(0, 0, 255, 0);
+      ellipse(playerX, playerY, increment - 15, increment - 15);
+
+      if (isOnGoal == 1) {
+        //reachedGoal
+        keepScore++;
+        expand = true;
+      }
+      if (expand) {
+        animateRect();
+      }
+      if (opacity > 255) {
+        rectSize = 30;
+        opacity = 0;
+        expand = false;
+      }
+    }
+  }
 }
