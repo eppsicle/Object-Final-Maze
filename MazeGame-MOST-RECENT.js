@@ -27,6 +27,8 @@ let expand = false; //determines when to animate rect
 
 let rectSize = 50; //increment
 let opacity = 0;
+let textOpacity = 255;
+let textDull = true; 
 
 //initialize 2D array that stores the positions of the wall for each maze
 let mazes = [];
@@ -40,14 +42,13 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth,windowHeight); 
-  increment = windowHeight/9;
+  increment = windowHeight/11;
 
   serial = new p5.SerialPort();
 
   serial.list();
-  //serial.open('COM4');
+  serial.open('COM4');
   //serial.open('COM7');
-  serial.open("COM7");
 
   serial.on("connected", serverConnected);
 
@@ -206,7 +207,6 @@ function setup() {
   mazes[4] = maze5;
 
   vid = createVideo("SwitchPage.mp4");
-  vid.size(increment * 13, increment * 9);
   vid.position(0, 0);
   vid.hide();
   vid.pause();
@@ -278,14 +278,39 @@ function animateRect() {
 let keepScore = 0;
 function draw() {
   createCanvas(windowWidth,windowHeight); 
-  increment = windowHeight/9;
+  increment = windowHeight/11;
   if (timer == 120) {
     //console.log(timer);
-    image(img, 0, 0, increment * 13, increment * 9);
+    image(img, 0, 0, increment*13, increment*9); 
+    fill(255,255,255,textOpacity);
+    textSize(40);
+    text("  Press Down on Controller to Start", increment, increment*9.5);
+    if(textOpacity >= 255){
+      textDull = true;
+    }
+    if(textOpacity <= 0){
+      textDull = false;
+    }
+    if(textDull){
+      textOpacity -= 4;
+    }
+    else{
+      textOpacity += 4; 
+    }
+    
+    fill(255,255,255);
+    textSize(45); 
+    textAlign(CENTER);
+    text("High Score", increment*16, increment*2);
+    text(keepScore,increment*16, increment*3.5);
+    stroke(255,255,255);
+    noFill();
+    rect(increment*16, increment*2.5, increment*4,0);
+    
   } else {
     //console.log(switchTime);
     if (switchTime == 1) {
-      //console.log("LMAO");
+      vid.size(windowWidth, windowHeight);
       vid.play();
       switchTimeFunction();
     } else {
@@ -300,8 +325,8 @@ function draw() {
 
       //display the timer and goals
       textSize(windowHeight/10);
-      text("Time: " + timer, increment * 9.5, increment * 3);
-      text("Goals: " + numGoals, increment * 9.5, increment * 5);
+      text("Time: " + timer, increment * 12, increment * 3);
+      text("Goals: " + numGoals, increment * 12, increment * 5);
       
       //display labels
       for(i=0; i<8; i++){
@@ -354,7 +379,6 @@ function draw() {
 
       if (isOnGoal == 1) {
         //reachedGoal
-        keepScore++;
         expand = true;
       }
       if (expand) {
@@ -364,6 +388,9 @@ function draw() {
         rectSize = 30;
         opacity = 0;
         expand = false;
+      }
+      if(int(numGoals) > keepScore){
+        keepScore = int(numGoals); 
       }
     }
   }
