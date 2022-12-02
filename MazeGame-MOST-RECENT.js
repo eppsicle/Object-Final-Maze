@@ -31,6 +31,8 @@ let opacity = 0;
 //initialize 2D array that stores the positions of the wall for each maze
 let mazes = [];
 
+let letters = ["A","B","C","D","E","F","G","H"]; // labels for maze
+
 let img;
 function preload() {
   img = loadImage("final-project-logo.png");
@@ -300,6 +302,15 @@ function draw() {
       textSize(windowHeight/10);
       text("Time: " + timer, increment * 9.5, increment * 3);
       text("Goals: " + numGoals, increment * 9.5, increment * 5);
+      
+      //display labels
+      for(i=0; i<8; i++){
+        textSize(40);
+        textAlign(CENTER);
+        text(letters[i], increment*(i+1), increment * 9.35);
+        textSize(45);
+        text(i+1, increment * 9.2, increment * (i+1) + increment/5); 
+      }
 
       // stroke(0,0,0);
       noStroke();
