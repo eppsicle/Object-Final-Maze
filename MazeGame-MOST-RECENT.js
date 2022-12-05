@@ -266,10 +266,9 @@ function switchTimeFunction() {
 }
 
 function animateRect() {
+  noStroke(); 
   fill(144, 238, 144, 255 - opacity);
-  // fill(144, 144, 0,255-opacity);
   rect(playerX, playerY, rectSize, rectSize);
-  // 200s should be replaced with the player position
 
   rectSize += 10;
   opacity += 20;
@@ -337,13 +336,11 @@ function draw() {
         text(i+1, increment * 9.2, increment * (i+1) + increment/5); 
       }
 
-      // stroke(0,0,0);
-      noStroke();
-
       //calculate the player's x and y position from the player position value that ranges from 0 to 63
       playerX = (playerPos % 8) * increment + increment;
       playerY = floor(playerPos / 8) * increment + increment;
-
+      
+      stroke(255,255,255);
       //draw the white background rectangle
       rectMode(CENTER);
       for (x = 1; x < 9; x++) {
@@ -352,6 +349,7 @@ function draw() {
         }
       }
 
+       stroke(0,0,0); 
       //draw the black squares that demarcate the walls of the maze
       fill(0, 0, 0);
       //console.log(whichMaze);
@@ -363,7 +361,8 @@ function draw() {
           increment
         );
       }
-
+      
+      noStroke(); 
       //draw the goal
       fill(0, 255, 0, 0);
       rect(
