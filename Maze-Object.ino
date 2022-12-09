@@ -93,9 +93,23 @@ void timeToSwitch(){
     strip.setPixelColor(i, 0, 0, 0);
   }
   strip.show();
+  
 }
 
-
+void startScreen(){
+  int miniTimer = 0;
+  while(miniTimer != 600){
+    miniTimer++;
+    strip.setPixelColor(floor(miniTimer/4.6875),  255,255,0);
+    strip.show();
+  }
+  miniTimer = 0;
+  while(miniTimer != 600){
+    miniTimer++;
+    strip.setPixelColor(floor(miniTimer/8), 0, 0, 0);
+    strip.show();
+  }
+}
 
 void loop() {
     downVal = digitalRead(downPin);
@@ -103,27 +117,47 @@ void loop() {
     leftVal = digitalRead(leftPin);
     upVal = digitalRead(upPin);
 
-    strip.setPixelColor(characterPos, 0, 0, 255);
-    strip.setPixelColor(mazes[whichMaze].goal, 0, 255, 0);
-    strip.show();
+    for (int i = 0; i < 64; i++){
+        strip.setPixelColor(i, 0, 0, 0);
+      }
+      strip.show();
     
-    if((characterPos != 0 || timer != 120)){
+    if((characterPos != 0 || timer != 120)){ //Game is running
       timerCounter++;
+      strip.setPixelColor(characterPos, 0, 0, 255);
+      strip.setPixelColor(mazes[whichMaze].goal, 0, 255, 0);
+      strip.show();
       if (timerCounter%60 == 0){
         timer--;
       }
-      if (timer == 0){
+      if (timer == 0){ //game is over
         characterPos = 0;
         whichMaze = 0;
         timer = 120;
         numGoals = 0;
         for (int i = 0; i < 64; i++){
-          strip.setPixelColor(i, 0, 0, 0);
+          strip.setPixelColor(i, 255, 255, 0);
         }
         strip.show();
       }
     }
+    else{//Game is not running
+      for (int i = 0; i < 64; i+=2){
+        if(int(floor(i/8)) % 2 == 0){//Even row
+          strip.setPixelColor(i, 255, 255, 0);
+          strip.setPixelColor(i+1, 0, 0, 255);
+        }
+        else{ //odd Rows light up odds
+          strip.setPixelColor(i, 0, 0, 255);
+          strip.setPixelColor(i+1, 255, 255, 0);
+        }
+      }
+      strip.show();
       
+    }
+
+
+    
       Serial.print(timer); // time
       Serial.print(',');
       Serial.print(characterPos);
