@@ -260,7 +260,6 @@ function gotData() {
 }
 
 function switchTimeFunction() {
-  console.log("Switch Time");
   clear();
   vid.show();
 }
