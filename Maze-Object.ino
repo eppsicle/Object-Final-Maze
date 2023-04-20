@@ -21,6 +21,7 @@ int upVal = 0;
 
 struct maze{
   int mazeNumber;
+  int startPos; 
   int goal;
   int mazeArray[64];
 };
@@ -34,24 +35,27 @@ bool rightButtonDown = false;
 bool upButtonDown = false;
 int characterPos = 0;
 
-int whichMaze = 0;
 int numGoals = 0;
 bool isOnGoal = false;
 bool isTimeUp = false;
 bool switchTime = false;
 
-  maze maze1 = {1, 7, {1, 3, 4, 5, 9, 12, 17, 18, 20, 21, 29, 30, 32, 33, 35, 41, 43, 44, 45, 46, 49, 51, 59, 62, 63, 63}};
-  maze maze2 = {2, 56, {0, 1, 2, 6, 12, 17, 18, 19, 20, 21, 22, 23, 29, 32, 33, 37, 41, 42, 43, 51, 52, 53, 54, 54, 54, 54}};
-  maze maze3 = {3, 16, {0, 7, 8, 9, 10, 11, 14, 15, 17, 25, 27, 28, 30, 35, 36, 37, 38, 41, 43, 48, 49, 50, 51, 54, 55, 63}};
-  maze maze4 = {4, 63, {3, 5, 7, 9, 11, 17, 19, 21, 22, 25, 27, 29, 32, 33, 37, 44, 45, 46, 48, 49, 50, 53, 61, 61, 61, 61}};
-  maze maze5 = {5, 0, {1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 51, 54, 56, 57, 58, 59, 61, 62}};
+  maze maze1 = {1, 0, 7, {1, 3, 4, 5, 9, 12, 17, 18, 20, 21, 29, 30, 32, 33, 35, 41, 43, 44, 45, 46, 49, 51, 59, 62, 63, 63}};
+  maze maze2 = {2, 7, 56, {0, 1, 2, 6, 12, 17, 18, 19, 20, 21, 22, 23, 29, 32, 33, 37, 41, 42, 43, 51, 52, 53, 54, 54, 54, 54}};
+  maze maze3 = {3, 56, 16, {0, 7, 8, 9, 10, 11, 14, 15, 17, 25, 27, 28, 30, 35, 36, 37, 38, 41, 43, 48, 49, 50, 51, 54, 55, 63}};
+  maze maze4 = {4, 16, 63, {3, 5, 7, 9, 11, 17, 19, 21, 22, 25, 27, 29, 32, 33, 37, 44, 45, 46, 48, 49, 50, 53, 61, 61, 61, 61}};
+  maze maze5 = {5, 63, 0, {1, 9, 10, 12, 15, 18, 20, 22, 23, 28, 33, 34, 35, 36, 37, 38, 41, 46, 51, 54, 56, 57, 58, 59, 61, 62}};
   maze mazes[5] = {maze1, maze2, maze3, maze4, maze5};
+
+int whichMaze = 0;
+int prevMaze = -1; // just intially choosing a number that isn't a maze number
 
 void setup() {
   // put your setup code here, to run once:
   strip.begin();
   strip.show();
   
+  randomSeed(analogRead(12)); 
   pinMode(downPin, INPUT);
   pinMode(rightPin, INPUT);
   pinMode(leftPin, INPUT);
@@ -67,6 +71,16 @@ bool emptySpaceExists(int position, int walls[]){
     }
   }
 return true;   
+}
+
+void chooseNewMaze(){ // will change the global variable whichMaze into a random maze number
+  prevMaze = whichMaze; 
+  int numOfMazes = 5;
+  int newMaze = random(0,numOfMazes); // first parameter of random() is inclusive, second parameter is not inclusive
+  while(newMaze == prevMaze){ //makes sure that players don't play the same maze in a row while randomizing the order
+    newMaze = random(0,numOfMazes); 
+  }
+  whichMaze = newMaze; 
 }
 
 void timeToSwitch(){
@@ -194,12 +208,14 @@ void loop() {
         Serial.print(mazes[whichMaze].goal);
         Serial.print(',');
         Serial.println(false);
-        if(whichMaze != 4){
-          whichMaze = whichMaze+1;
+        if(numGoals % 5 != 0){
+          chooseNewMaze();
+          characterPos = mazes[whichMaze].startPos; 
         }
         else{
           timeToSwitch();
-          whichMaze = 0;
+          chooseNewMaze(); 
+          characterPos = mazes[whichMaze].startPos; 
         }
       }
       
