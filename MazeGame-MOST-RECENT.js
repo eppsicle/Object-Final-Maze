@@ -47,8 +47,8 @@ function setup() {
   serial = new p5.SerialPort();
 
   serial.list();
-  serial.open('COM4');
-  //serial.open('COM7');
+  //serial.open('COM4');
+  serial.open('COM7');
 
   serial.on("connected", serverConnected);
 
@@ -198,6 +198,13 @@ function setup() {
     61,
     62,
   ];
+  maze6 = [4, 5, 7, 17, 18, 19, 20, 21, 23, 25, 28, 33, 35, 36, 37, 38, 39, 41, 49, 50, 51, 52, 54, 55];
+  maze7 = [3, 9, 12, 13, 17, 18, 21, 23, 26, 27, 29, 34, 37, 38, 40, 42, 43, 45, 51, 57, 59, 61, 63];
+  maze8 = [9, 11, 14, 17, 19, 24, 25, 27, 30, 33, 34, 35, 38, 41, 43, 46, 49, 51, 52, 53, 54];
+  maze9 = [0, 6, 10, 13, 17, 20, 26, 29, 35, 38, 44, 51, 55, 58, 62];
+  maze10 = [16, 17, 18, 20, 21, 22, 25, 29, 42, 43, 44];
+  maze11 = [6, 9, 14, 19, 20, 26, 29, 34, 43, 44, 49, 54, 57];
+
 
   //place the mazes into the maze 2D array
   mazes[0] = maze1;
@@ -205,6 +212,12 @@ function setup() {
   mazes[2] = maze3;
   mazes[3] = maze4;
   mazes[4] = maze5;
+  mazes[5] = maze6;
+  mazes[6] = maze7;
+  mazes[7] = maze8;
+  mazes[8] = maze9;
+  mazes[9] = maze10;
+  mazes[10] = maze11,
 
   vid = createVideo("SwitchPage.mp4");
   vid.position(0, 0);
