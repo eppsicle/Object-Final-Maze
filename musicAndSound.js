@@ -1,4 +1,4 @@
-// Sound built into the goal animation
+// Sound incorporated into goal animation
 
 var goalNoise; 
 var song; 
@@ -40,6 +40,7 @@ function draw() {
     } 
   }
   else{
+    song.rate(1); // can change speed with this, see mouseClicked()
     song.stop(); 
   } 
   
@@ -63,4 +64,8 @@ function draw() {
     expand = false; 
   }
   
+}
+
+function mouseClicked(){
+  song.rate(1.1);
 }
