@@ -28,6 +28,19 @@ let opacity = 0;
 let textOpacity = 255;
 let textDull = true; 
 
+// These coordinates determine where the tip of each arrow goes
+// just change these to translate the arrows wherever
+var rightArrowX = 1536/2 + 100; 
+var rightArrowY = 864/2 + 70;
+
+var leftArrowX = 1536/2 - 100;
+var leftArrowY = 864/2 + 230;
+
+var goalNoise; 
+var song; 
+var countDown; 
+var endingNoise; 
+
 //initialize 2D array that stores the positions of the wall for each maze
 let mazes = [];
 
@@ -36,6 +49,10 @@ let letters = ["A","B","C","D","E","F","G","H"]; // labels for maze
 let img;
 function preload() {
   img = loadImage("final-project-logo.png");
+  goalNoise = loadSound('goalNoise.mp3');
+  song = loadSound('for-elevator-jazz-music-124005.mp3');
+  countdownNoise = loadSound('countdownBloop.wav');
+  endingNoise = loadSound('endingNoise.wav');
 }
 
 function setup() {
@@ -45,8 +62,8 @@ function setup() {
   serial = new p5.SerialPort();
 
   serial.list();
-  //serial.open('COM4');
-  serial.open('COM7');
+  serial.open('COM4');
+  // serial.open('COM7');
 
   serial.on("connected", serverConnected);
 
@@ -274,15 +291,7 @@ function animateRect() {
   opacity += 20;
 }
 
-var arrowOpacity = 0; 
-
-// These coordinates determine where the tip of each arrow goes
-// just change these to translate the arrows wherever
-var rightArrowX = 1000/2; 
-var rightArrowY = 1000/2 - 100;
-
-var leftArrowX = 1000/2;
-var leftArrowY = 1000/2 + 100; 
+var arrowOpacity = 0;  
 
 var moveCounter = 0; // this determines when direction changes
 var moveOneDirection = true; // this determines direction
@@ -314,8 +323,8 @@ function drawArrows(){
     vertex(rightArrowX, rightArrowY);
     vertex(rightArrowX+100, rightArrowY+100);
     vertex(rightArrowX+100, rightArrowY+50);
-    vertex(rightArrowX+250, rightArrowY+50);
-    vertex(rightArrowX+250, rightArrowY-50);
+    vertex(rightArrowX+350, rightArrowY+50);
+    vertex(rightArrowX+350, rightArrowY-50);
     vertex(rightArrowX+100, rightArrowY-50);
     vertex(rightArrowX+100, rightArrowY-50);
     vertex(rightArrowX+100, rightArrowY-100);
@@ -325,8 +334,8 @@ function drawArrows(){
     vertex(leftArrowX, leftArrowY);
     vertex(leftArrowX-100, leftArrowY-100);
     vertex(leftArrowX-100, leftArrowY-50);
-    vertex(leftArrowX-250, leftArrowY-50);
-    vertex(leftArrowX-250, leftArrowY+50);
+    vertex(leftArrowX-350, leftArrowY-50);
+    vertex(leftArrowX-350, leftArrowY+50);
     vertex(leftArrowX-100, leftArrowY+50);
     vertex(leftArrowX-100, leftArrowY+50);
     vertex(leftArrowX-100, leftArrowY+100);
@@ -334,15 +343,32 @@ function drawArrows(){
 }
 
 var oldNumGoals = 0;
+var oldTimer = 11; 
 var keepScore = 0;
+var endingNoiseNotPlayed = true; 
 
 function draw() {
   createCanvas(windowWidth,windowHeight); 
+  
+  // console.log("windowWidth: " + windowWidth);
+  // console.log("windowHeight: " + windowHeight);
+  
+  fill(255,255,255,arrowOpacity); 
+  textAlign(CENTER);
+  textSize(windowHeight/5);
+  text("SWITCH", windowWidth/2, 300);
+  textAlign(LEFT);
   drawArrows();
+  
   increment = windowHeight/11;
   if (timer == 120) {
+    song.stop();
+    song.rate(1);
+    
     //console.log(timer);
     oldNumGoals = 0;
+    oldTimer = 11;
+    endingNoiseNotPlayed = true; 
     image(img, 0, 0, increment*13, increment*9); 
     fill(255,255,255,textOpacity);
     textSize(40);
@@ -371,10 +397,30 @@ function draw() {
     
   } else {
     //console.log(switchTime);
-    if (switchTime == 1) {
+    if (switchTime == 1) { 
       animateArrows(); 
       arrowOpacity = 255; 
     } else {
+      
+      if(!song.isPlaying()){
+        song.loop(); 
+      } 
+      
+      if(timer == 30){
+         song.rate(1.2);
+      }
+      
+      if(timer < oldTimer){
+         countdownNoise.play(); 
+        oldTimer = timer; 
+      }
+      
+      if(timer == 0 && endingNoiseNotPlayed){
+        endingNoise.play();
+        endingNoiseNotPlayed = false; 
+        song.stop(); 
+      }
+      
       arrowOpacity = 0; 
       //set drawing style
       clear();
@@ -442,6 +488,7 @@ function draw() {
         //reachedGoal
         oldNumGoals = oldNumGoals + 1;
         expand = true;
+        goalNoise.play();
       }
       if (expand) {
         animateRect();
