@@ -139,6 +139,8 @@ void loop() {
     leftVal = digitalRead(leftPin);
     upVal = digitalRead(upPin);
 
+    //if(upVal == true){Serial.println("UP BUTTON HIT");};
+
     for (int i = 0; i < 64; i++){
         strip.setPixelColor(i, 0, 0, 0);
       }
@@ -245,9 +247,9 @@ void loop() {
         Serial.print(',');
         Serial.print(mazes[whichMaze].goal);
         Serial.print(',');
-      Serial.println(false);
-        characterPos = characterPos - 8;
+        Serial.println(false);
         
+        characterPos = characterPos - 8;
       }
       if (upVal == 0 && upButtonDown == true){
         upButtonDown = false;
