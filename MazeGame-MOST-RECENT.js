@@ -21,8 +21,6 @@ let switchTime = 0;
 let switched = false;
 let switchTimer = 0;
 
-let vid;
-
 let expand = false; //determines when to animate rect
 
 let rectSize = 50; //increment
@@ -217,12 +215,7 @@ function setup() {
   mazes[7] = maze8;
   mazes[8] = maze9;
   mazes[9] = maze10;
-  mazes[10] = maze11,
-
-  vid = createVideo("SwitchPage.mp4");
-  vid.position(0, 0);
-  vid.hide();
-  vid.pause();
+  mazes[10] = maze11;
 }
 
 function serverConnected() {
@@ -272,11 +265,6 @@ function gotData() {
   latestData = currentString;
 }
 
-function switchTimeFunction() {
-  clear();
-  vid.show();
-}
-
 function animateRect() {
   noStroke(); 
   fill(144, 238, 144, 255 - opacity);
@@ -286,12 +274,75 @@ function animateRect() {
   opacity += 20;
 }
 
-let keepScore = 0;
+var arrowOpacity = 0; 
+
+// These coordinates determine where the tip of each arrow goes
+// just change these to translate the arrows wherever
+var rightArrowX = 1000/2; 
+var rightArrowY = 1000/2 - 100;
+
+var leftArrowX = 1000/2;
+var leftArrowY = 1000/2 + 100; 
+
+var moveCounter = 0; // this determines when direction changes
+var moveOneDirection = true; // this determines direction
+
+function animateArrows(){ 
+    
+    if(moveCounter <= 0){
+      moveOneDirection = true; 
+    }
+    if(moveCounter >=150){
+      moveOneDirection = false;  // time to reverse directions
+    }
+    if(moveOneDirection){
+      moveCounter +=3;
+      rightArrowX -=3;
+      leftArrowX +=3;
+    }
+    else{
+      moveCounter -=3; 
+      rightArrowX +=3;
+      leftArrowX -=3;
+    }    
+}
+
+function drawArrows(){
+  noStroke();
+  fill(255, 255, 255 ,arrowOpacity);
+  beginShape(); // right arrow
+    vertex(rightArrowX, rightArrowY);
+    vertex(rightArrowX+100, rightArrowY+100);
+    vertex(rightArrowX+100, rightArrowY+50);
+    vertex(rightArrowX+250, rightArrowY+50);
+    vertex(rightArrowX+250, rightArrowY-50);
+    vertex(rightArrowX+100, rightArrowY-50);
+    vertex(rightArrowX+100, rightArrowY-50);
+    vertex(rightArrowX+100, rightArrowY-100);
+  endShape(CLOSE);
+  
+  beginShape(); // left arrow
+    vertex(leftArrowX, leftArrowY);
+    vertex(leftArrowX-100, leftArrowY-100);
+    vertex(leftArrowX-100, leftArrowY-50);
+    vertex(leftArrowX-250, leftArrowY-50);
+    vertex(leftArrowX-250, leftArrowY+50);
+    vertex(leftArrowX-100, leftArrowY+50);
+    vertex(leftArrowX-100, leftArrowY+50);
+    vertex(leftArrowX-100, leftArrowY+100);
+  endShape(CLOSE);
+}
+
+var oldNumGoals = 0;
+var keepScore = 0;
+
 function draw() {
   createCanvas(windowWidth,windowHeight); 
+  drawArrows();
   increment = windowHeight/11;
   if (timer == 120) {
     //console.log(timer);
+    oldNumGoals = 0;
     image(img, 0, 0, increment*13, increment*9); 
     fill(255,255,255,textOpacity);
     textSize(40);
@@ -321,12 +372,10 @@ function draw() {
   } else {
     //console.log(switchTime);
     if (switchTime == 1) {
-      vid.size(windowWidth, windowHeight);
-      vid.play();
-      switchTimeFunction();
+      animateArrows(); 
+      arrowOpacity = 255; 
     } else {
-      vid.stop();
-      vid.hide();
+      arrowOpacity = 0; 
       //set drawing style
       clear();
       switchTimer = 0;
@@ -388,13 +437,16 @@ function draw() {
       fill(0, 0, 255, 0);
       ellipse(playerX, playerY, increment - 15, increment - 15);
 
-      if (isOnGoal == 1) {
+      
+      if (numGoals > oldNumGoals) {
         //reachedGoal
+        oldNumGoals = oldNumGoals + 1;
         expand = true;
       }
       if (expand) {
         animateRect();
       }
+      
       if (opacity > 255) {
         rectSize = 30;
         opacity = 0;
