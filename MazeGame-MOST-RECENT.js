@@ -40,6 +40,7 @@ var goalNoise;
 var song; 
 var countDown; 
 var endingNoise; 
+var homeNoise; 
 
 //initialize 2D array that stores the positions of the wall for each maze
 let mazes = [];
@@ -52,7 +53,9 @@ function preload() {
   goalNoise = loadSound('goalNoise.mp3');
   song = loadSound('for-elevator-jazz-music-124005.mp3');
   countdownNoise = loadSound('countdownBloop.wav');
-  endingNoise = loadSound('endingNoise.wav');
+  endingNoise = loadSound('endingNoiseDelayed.wav');
+  homeNoise = loadSound('cool-jazz-loops-2641.mp3');
+  
 }
 
 function setup() {
@@ -363,7 +366,10 @@ function draw() {
   increment = windowHeight/11;
   if (timer == 120) {
     song.stop();
-    song.rate(1);
+    song.rate(1.05);
+    if(!homeNoise.isPlaying()){
+        homeNoise.loop(); 
+    }  
     
     //console.log(timer);
     oldNumGoals = 0;
@@ -402,6 +408,7 @@ function draw() {
       arrowOpacity = 255; 
     } else {
       
+      homeNoise.stop(); 
       if(!song.isPlaying()){
         song.loop(); 
       } 
@@ -415,10 +422,10 @@ function draw() {
         oldTimer = timer; 
       }
       
-      if(timer == 0 && endingNoiseNotPlayed){
+      if(timer == 1 && endingNoiseNotPlayed){
+        endingNoise.rate(0.7);
         endingNoise.play();
         endingNoiseNotPlayed = false; 
-        song.stop(); 
       }
       
       arrowOpacity = 0; 
